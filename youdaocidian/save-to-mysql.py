@@ -113,13 +113,14 @@ def crawler_by_link():
 
 def crawler_by_pid(pid):
     response = urllib.request.urlopen(articleUrl_prefix + str(pid) + articleUrl_suffix)
-    result = response.read().decode('utf-8')
+
     # print(result.substring(120, 130))
     try:
+        result = response.read().decode('utf-8')
         article = json.loads(result)
+        return article
     except:
-        print(article)
-    return article
+        return {}
 
 
 def insert_article(article):
@@ -177,7 +178,7 @@ def insert_article(article):
 
 
 if __name__ == '__main__':
-    pid = 1666387
+    pid = 1653981
     while pid > 0:
         print(pid)
         article = crawler_by_pid(pid)
