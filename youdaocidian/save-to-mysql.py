@@ -1,6 +1,7 @@
 import urllib.request
 import json
 import pymysql
+import threading
 
 cardsUrl = 'http://dict.youdao.com/infoline/style?client=mobile&apiversion=3.0&style=morning&order=desc' \
            '&keyfrom=mdict.7.8.2.android&model=MI_5s_Plus&mid=8.0.0&imei=99000828489816&vendor=xiaomi' \
@@ -163,11 +164,15 @@ def insert_article(article):
         else:
             type = ''
             style = ''
+        if 'media' in article.keys():
+            media = article['media']
+        else:
+            media = ''
 
         cursor.execute(sql, (
             article['pid'], article['title'], card_id,
             card_title, url,
-            type, article['categoryName'], article['media'],
+            type, article['categoryName'], media,
             style, image, article['content']))
         connection.commit()
     except Exception as e:
@@ -177,12 +182,98 @@ def insert_article(article):
         connection.close()
 
 
-if __name__ == '__main__':
-    pid = 1653981
-    while pid > 0:
-        print(pid)
+def insert1():
+    pid = 1600000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1500000:
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
-            print(article['title'])
             insert_article(article)
         pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+def insert2():
+    pid = 1500000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1400000:
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            insert_article(article)
+        pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+def insert3():
+    pid = 1400000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1300000:
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            insert_article(article)
+        pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+def insert4():
+    pid = 1300000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1200000:
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            insert_article(article)
+        pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+def insert5():
+    pid = 1200000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1100000:
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            insert_article(article)
+        pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+def insert6():
+    pid = 1100000
+    print('thread %s is running...' % threading.current_thread().name)
+    while pid > 1000000:
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            insert_article(article)
+        pid = pid - 1
+    print('thread %s is finished...' % threading.current_thread().name)
+
+
+if __name__ == '__main__':
+    t1 = threading.Thread(target=insert1, name='insert1')
+    t2 = threading.Thread(target=insert2, name='insert2')
+    t3 = threading.Thread(target=insert3, name='insert3')
+    t4 = threading.Thread(target=insert4, name='insert4')
+    t5 = threading.Thread(target=insert5, name='insert5')
+    t6 = threading.Thread(target=insert6, name='insert6')
+    t1.start()
+    t2.start()
+    t3.start()
+    t4.start()
+    t5.start()
+    t6.start()
+    t1.join()
+    t2.join()
+    t3.join()
+    t4.join()
+    t5.join()
+    t6.join()
+
+# if __name__ == '__main__':
+#     pid = 1683800
+#     while pid > 0:
+#         print(pid)
+#         article = crawler_by_pid(pid)
+#         if 'title' in article.keys():
+#             print(article['title'])
+#             insert_article(article)
+#         pid = pid - 1
