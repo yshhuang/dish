@@ -119,6 +119,8 @@ def crawler_by_pid(pid):
     try:
         result = response.read().decode('utf-8')
         article = json.loads(result)
+        if article is None:
+            return {}
         return article
     except:
         return {}
@@ -186,6 +188,7 @@ def insert1():
     pid = 1600000
     print('thread %s is running...' % threading.current_thread().name)
     while pid > 1500000:
+
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
             insert_article(article)
@@ -197,8 +200,10 @@ def insert2():
     pid = 1500000
     print('thread %s is running...' % threading.current_thread().name)
     while pid > 1400000:
+        print(pid)
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
+            print(article['title'])
             insert_article(article)
         pid = pid - 1
     print('thread %s is finished...' % threading.current_thread().name)

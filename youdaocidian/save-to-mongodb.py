@@ -13,12 +13,14 @@ error_collection = db['error']
 
 
 def crawler_by_pid(pid):
-    response = urllib.request.urlopen(articleUrl_prefix + str(pid) + articleUrl_suffix)
-
     # print(result.substring(120, 130))
+
     try:
+        response = urllib.request.urlopen(articleUrl_prefix + str(pid) + articleUrl_suffix)
         result = response.read().decode('utf-8')
         article = json.loads(result)
+        if article is None:
+            return {}
         return article
     # except Exception as e:
     #     error_collection.insert_one({'project': '有道词典', 'method': 'crawler_by_pid',
@@ -101,7 +103,7 @@ def insert6():
     print('thread %s is finished...' % threading.current_thread().name)
 
 
-if __name__ == '__main__':
+def start_6_threads():
     t1 = threading.Thread(target=insert1, name='insert1')
     t2 = threading.Thread(target=insert2, name='insert2')
     t3 = threading.Thread(target=insert3, name='insert3')
@@ -121,11 +123,18 @@ if __name__ == '__main__':
     t5.join()
     t6.join()
 
-    # pid = 1683800
-    # while pid > 0:
-    #     print(pid)
-    #     article = crawler_by_pid(pid)
-    #     if 'title' in article.keys():
-    #         print(article['title'])
-    #         insert_article(article)
-    #     pid = pid - 1
+
+def insert_latest_article():
+    pid = 1690000
+    while pid > 1680000:
+        print(pid)
+        article = crawler_by_pid(pid)
+        if 'title' in article.keys():
+            print(article['title'])
+            insert_article(article)
+        pid = pid - 1
+
+
+if __name__ == '__main__':
+    # start_6_threads()
+    insert_latest_article()
