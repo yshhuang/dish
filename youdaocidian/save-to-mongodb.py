@@ -27,7 +27,7 @@ def crawler_by_pid(pid):
     #                                  'params': pid})
     #     print(article)
     except:
-        return {}
+        return crawler_by_pid(pid)
 
 
 def insert_article(article):
@@ -125,14 +125,18 @@ def start_6_threads():
 
 
 def insert_latest_article():
+    empty = 0;
     pid = 1690000
-    while pid > 1680000:
+    while empty < 100:
         print(pid)
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
             print(article['title'])
             insert_article(article)
-        pid = pid - 1
+            empty = 0
+        else:
+            empty = empty + 1
+        pid = pid + 1
 
 
 if __name__ == '__main__':
