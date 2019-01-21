@@ -1,7 +1,7 @@
 import pymongo
 import urllib.request as req
 import json
-import os
+import os, sys
 
 movies_url_prefix = 'https://c.open.163.com/mob/'
 movies_url_suffix = '/getMoviesForAndroid.do'
@@ -61,11 +61,17 @@ def download_movies(plid):
         os.mkdir(download_path + movies['title'])
     video_list = movies['videoList']
     for video in video_list:
-        req.urlretrieve(video['mp4SdUrlOrign'], download_path + movies['title'] + '/' + video[
+        url = video['mp4SdUrl']
+        if url == "":
+            url = video['mp4SdUrlOrign']
+        req.urlretrieve(url, download_path + movies['title'] + '/' + video[
             'title'] + '.mp4')
 
 
 if __name__ == '__main__':
-    crawler_via_recommend()
-    print('爬虫结束,共爬了%d个视频集合' % len(all_movies_set))
-    # download_movies('M6SGF6VB4')
+    # crawler_via_recommend()
+    # print('爬虫结束,共爬了%d个视频集合' % len(all_movies_set))
+    plids = sys.argv
+    print(plids)
+    for i in range(1, len(sys.argv)):
+        download_movies(sys.argv[i])

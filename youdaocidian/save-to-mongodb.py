@@ -9,12 +9,9 @@ articleUrl_prefix = 'http://xue.youdao.com/sw/m/'
 client = pymongo.MongoClient()
 db = client['dish']
 collection = db['youdao_dict']
-error_collection = db['error']
 
 
 def crawler_by_pid(pid):
-    # print(result.substring(120, 130))
-
     try:
         response = urllib.request.urlopen(articleUrl_prefix + str(pid) + articleUrl_suffix)
         result = response.read().decode('utf-8')
@@ -22,10 +19,6 @@ def crawler_by_pid(pid):
         if article is None:
             return {}
         return article
-    # except Exception as e:
-    #     error_collection.insert_one({'project': '有道词典', 'method': 'crawler_by_pid',
-    #                                  'params': pid})
-    #     print(article)
     except:
         return crawler_by_pid(pid)
 
@@ -125,7 +118,7 @@ def start_6_threads():
 
 
 def insert_latest_article():
-    empty = 0;
+    empty = 0
     pid = 1690000
     while empty < 100:
         print(pid)
