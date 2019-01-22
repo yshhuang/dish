@@ -10,7 +10,7 @@ collection = db['open163']
 
 subscribe_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/info.do?subscribeId='
 content_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/list.do' \
-                     '?rtypes=2%2C3%2C4%2C5%2C6%2C8%2C9%2C10%2C11%2C12&pagesize=1000'
+                     '?rtypes=2%2C3%2C4%2C5%2C6%2C8%2C9%2C10%2C11%2C12&pagesize=10'
 movies_url_prefix = 'https://c.open.163.com/mob/'
 movies_url_suffix = '/getMoviesForAndroid.do'
 
@@ -80,17 +80,29 @@ def crawler_all_subscribe():
 
 
 def crawler_content(subscribeId):
-    url = content_url_prefix + '&subscribeId=' + str(subscribeId)
+    content = []
+    cursor = ''
+    result = crawler_content_page(subscribeId, cursor)
+    while 'data' in result.keys() and 'cursor' in result.keys():
+        content = content + result['data']
+        cursor = result['cursor']
+        result = crawler_content_page(subscribeId, cursor)
+    if 'data' in result.keys():
+        content = content + result['data']
+    print(len(content))
+    insert_contents(content)
+
+
+def crawler_content_page(subscribeId, cursor=''):
+    # print(subscribe_url_prefix)
+    url = content_url_prefix + '&subscribeId=' + str(
+        subscribeId) + '&cursor=' + cursor
     response = urllib.request.urlopen(url)
     result = response.read().decode('utf-8')
-    result_json = json.loads(result)
-    if result_json is None or 'data' not in result_json.keys():
+    content = json.loads(result)
+    if content is None or 'data' not in content.keys():
         return {}
-
-    if 'data' in result_json.keys():
-        content = result_json['data']
-        insert_contents(content)
-    print(len(content))
+    return content
 
 
 if __name__ == '__main__':
