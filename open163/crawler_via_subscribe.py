@@ -1,6 +1,9 @@
 import pymongo
 import urllib.request
 import json
+import logging
+
+logging.basicConfig(filename='logger.log', level=logging.INFO)
 
 client = pymongo.MongoClient()
 db = client['dish']
@@ -66,7 +69,7 @@ def insert_movies(plid):
 
 def crawler_all_subscribe():
     empty = 0
-    subscribeId = 991
+    subscribeId = 4080
     while empty < 100:
         subscribe = crawler_subscribe(subscribeId)
         if 'subscribeName' in subscribe.keys():

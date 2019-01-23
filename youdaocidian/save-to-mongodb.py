@@ -3,6 +3,10 @@ import urllib.request
 import json
 import threading
 
+import logging
+
+logging.basicConfig(filename='logger.log', level=logging.INFO)
+
 articleUrl_suffix = '?showmethod=native&keyfrom=wap&client=wap'
 articleUrl_prefix = 'http://xue.youdao.com/sw/m/'
 
@@ -117,14 +121,16 @@ def start_6_threads():
     t6.join()
 
 
-def insert_latest_article():
+def insert_latest_article(pid):
     empty = 0
-    pid = 1690000
+    # pid = 1690000
     while empty < 100:
-        print(pid)
+        # print(pid)
+        logging.info(pid)
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
-            print(article['title'])
+            # print(article['title'])
+            logging.info(article['title'])
             insert_article(article)
             empty = 0
         else:
@@ -132,6 +138,13 @@ def insert_latest_article():
         pid = pid + 1
 
 
+def get_max_pid():
+    doc = collection.find().sort('pid', pymongo.DESCENDING).limit(1)
+    return doc.next()['pid']
+
+
 if __name__ == '__main__':
     # start_6_threads()
-    insert_latest_article()
+
+    max_pid = get_max_pid()
+    insert_latest_article(max_pid)
