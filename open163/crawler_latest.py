@@ -54,13 +54,11 @@ def crawler_latest_subscribe(subscribeId):
         subscribe_before = find_by_subscribeId(subscribeId)
         subscribe = crawler_subscribe(subscribeId)
         if 'subscribeName' in subscribe.keys():
-            print(subscribe['subscribeName'])
             if subscribe_before is None or 'subscribeArticleCount' not in subscribe_before.keys():
                 size = subscribe['subscribeArticleCount']
             else:
                 size = subscribe['subscribeArticleCount'] - subscribe_before[
                     'subscribeArticleCount']
-            print(size)
             update_subscribe(subscribe)
             if size > 0:
                 crawler_content(subscribeId, size)

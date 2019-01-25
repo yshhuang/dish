@@ -1,8 +1,6 @@
 import pymongo
 import urllib.request
 import json
-import threading
-
 import logging
 
 logging.basicConfig(filename='logger.log', level=logging.INFO)
@@ -23,8 +21,6 @@ def crawler_by_id(id):
         article = json.loads(result)
         if article is None:
             return {}
-        if id % 100 == 0:
-            print(id, article['title'])
         return article
     except Exception as e:
         # print(e)
