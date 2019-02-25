@@ -130,7 +130,7 @@ def insert_latest_article(pid):
         article = crawler_by_pid(pid)
         if 'title' in article.keys():
             # print(article['title'])
-            logging.info(article['title'])
+            # logging.info(article['title'])
             insert_article(article)
             empty = 0
         else:
