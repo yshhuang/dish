@@ -7,7 +7,7 @@ client = pymongo.MongoClient()
 db = client['dish']
 collection_subscribe = db['open163_subscribe']
 collection_content = db['open163_content']
-collection = db['open163']
+collection = db['open163_movie']
 
 subscribe_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/info.do?subscribeId='
 content_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/list.do' \
@@ -48,7 +48,8 @@ def find_by_subscribeId(subscribeId):
     return doc
 
 
-def crawler_latest_subscribe(subscribeId):
+def crawler_latest_subscribe():
+    subscribeId = 1
     empty = 0
     while empty < 100:
         subscribe_before = find_by_subscribeId(subscribeId)
@@ -111,4 +112,4 @@ def insert_movies(plid):
 
 
 if __name__ == '__main__':
-    crawler_latest_subscribe(1)
+    crawler_latest_subscribe()

@@ -9,7 +9,7 @@ client = pymongo.MongoClient()
 db = client['dish']
 collection_subscribe = db['open163_subscribe']
 collection_content = db['open163_content']
-collection = db['open163']
+collection = db['open163_movie']
 
 subscribe_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/info.do?subscribeId='
 content_url_prefix = 'https://c.open.163.com/open/mob/subscribe/detail/list.do' \
@@ -34,7 +34,7 @@ def crawler_subscribe(subscribeId):
 
 def insert_subscribe(subscribe):
     try:
-        collection_subscribe.s
+        collection_subscribe.insert_one(subscribe)
     except pymongo.errors.DuplicateKeyError:
         pass
 
@@ -69,7 +69,7 @@ def insert_movies(plid):
 
 def crawler_all_subscribe():
     empty = 0
-    subscribeId = 4080
+    subscribeId = 1
     while empty < 100:
         subscribe = crawler_subscribe(subscribeId)
         if 'subscribeName' in subscribe.keys():
@@ -97,15 +97,18 @@ def crawler_content(subscribeId):
 
 
 def crawler_content_page(subscribeId, cursor=''):
-    # print(subscribe_url_prefix)
-    url = content_url_prefix + '&subscribeId=' + str(
-        subscribeId) + '&cursor=' + cursor
-    response = urllib.request.urlopen(url)
-    result = response.read().decode('utf-8')
-    content = json.loads(result)
-    if content is None or 'data' not in content.keys():
-        return {}
-    return content
+    try:
+        # print(subscribe_url_prefix)
+        url = content_url_prefix + '&subscribeId=' + str(
+            subscribeId) + '&cursor=' + cursor
+        response = urllib.request.urlopen(url)
+        result = response.read().decode('utf-8')
+        content = json.loads(result)
+        if content is None or 'data' not in content.keys():
+            return {}
+        return content
+    except:
+        crawler_content_page(subscribeId, cursor='')
 
 
 if __name__ == '__main__':

@@ -39,12 +39,12 @@ def insert_latest_article(id):
     empty = 0
     # id = 1690000
     while empty < 100:
-        # print(pid)
-        logging.info(id)
+        # print(id)
+        # logging.info(id)
         video = crawler_by_id(id)
         if 'title' in video.keys():
-            # print(article['title'])
-            logging.info(video['title'])
+            # print(video['title'])
+            # logging.info(video['title'])
             save_video(video)
             empty = 0
         else:
