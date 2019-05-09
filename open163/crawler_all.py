@@ -108,7 +108,8 @@ def crawler_content_page(subscribeId, cursor=''):
             return {}
         return content
     except:
-        crawler_content_page(subscribeId, cursor='')
+        print(subscribeId)
+        return crawler_content_page(subscribeId, cursor='')
 
 
 if __name__ == '__main__':
