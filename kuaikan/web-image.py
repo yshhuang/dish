@@ -14,7 +14,7 @@ def getHtml(url):
 def getImg(content):
     xml = etree.HTML(content)
     # print(content)
-    datas = xml.xpath('//*[@id="main"]/div[1]/div[3]/img/@data-kksrc')
+    datas = xml.xpath('//*[@id="__layout"]/div/div/div[2]/div[1]/div[4]/img/@src')
     print(datas)
     return datas
 
