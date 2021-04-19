@@ -20,7 +20,7 @@ def getImg(content):
 
 
 if __name__ == "__main__":
-    html = getHtml("https://www.kuaikanmanhua.com/web/comic/129558/")
+    html = getHtml("https://www.kuaikanmanhua.com/web/comic/47851/")
     # print(html)
     i = 0
     for imgurl in getImg(html):

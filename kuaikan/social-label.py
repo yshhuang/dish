@@ -9,12 +9,12 @@ image_down_path = "/Volumes/develop/data/image/social-label/"
 
 count = 0
 
-connection = pymysql.connect(host='localhost',
-                             port=3306,
-                             user='root',
-                             password='root1234',
-                             db='dish',
-                             charset='utf8')
+# connection = pymysql.connect(host='localhost',
+#                              port=3306,
+#                              user='root',
+#                              password='root1234',
+#                              db='dish',
+#                              charset='utf8')
 labelId = ""
 
 
@@ -32,35 +32,35 @@ def get_post_list(since):
         return {}
 
 
-def save_image(json):
-    global count
-
-    post = json.get('post')
-    if post is None:
-        return
-    post_id = post['id']
-    contents = post['content']
-    # print(post['summary'])
-    img_index = 0
-    for content in contents:
-        img_index += 1
-        if content['type'] == 2:
-            url = content['content']
-            path = image_down_path + str(post_id) + '-' + str(img_index)
-            if os.path.exists(path):
-                continue
-            cursor = connection.cursor()
-            effect_row = cursor.execute(
-                "INSERT INTO `image_similarity_url` (`url`, `label_ids`,`post_id`) VALUES (%s, "
-                "%s,%s) ON DUPLICATE KEY ""UPDATE label_ids=JSON_MERGE_PATCH(label_ids,%s)",
-                (url, "{\"" + labelId + "\":1}", post_id, "{\"" + labelId + "\":1}"))
-            connection.commit()
-
-            if effect_row == 1:
-                count = count + 1
-                print(count)
-            if count == 10000:
-                sys.exit(1)
+# def save_image(json):
+#     global count
+#
+#     post = json.get('post')
+#     if post is None:
+#         return
+#     post_id = post['id']
+#     contents = post['content']
+#     # print(post['summary'])
+#     img_index = 0
+#     for content in contents:
+#         img_index += 1
+#         if content['type'] == 2:
+#             url = content['content']
+#             path = image_down_path + str(post_id) + '-' + str(img_index)
+#             if os.path.exists(path):
+#                 continue
+#             cursor = connection.cursor()
+#             effect_row = cursor.execute(
+#                 "INSERT INTO `image_similarity_url` (`url`, `label_ids`,`post_id`) VALUES (%s, "
+#                 "%s,%s) ON DUPLICATE KEY ""UPDATE label_ids=JSON_MERGE_PATCH(label_ids,%s)",
+#                 (url, "{\"" + labelId + "\":1}", post_id, "{\"" + labelId + "\":1}"))
+#             connection.commit()
+#
+#             if effect_row == 1:
+#                 count = count + 1
+#                 print(count)
+#             if count == 10000:
+#                 sys.exit(1)
 
 
 def download_post_img(json):
